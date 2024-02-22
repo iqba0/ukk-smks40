@@ -8,7 +8,6 @@ if (!$role) {
 }
 include_once '../db/db_config.php';
 
-// Fungsi untuk mengambil data produk berdasarkan keyword
 function cariProduk($keyword) {
     global $conn;
     $query = "SELECT * FROM products WHERE nama_produk LIKE '%$keyword%' OR harga_produk LIKE '%$keyword%' OR kode_unik LIKE '%$keyword%'";
@@ -20,29 +19,24 @@ function cariProduk($keyword) {
     return $rows;
 }
 
-// Fungsi untuk menambahkan produk ke dalam struk dengan jumlah yang ditentukan
 function tambahkanProduk($id, $jumlah) {
     global $conn;
     $query = "SELECT * FROM products WHERE id = $id";
     $result = mysqli_query($conn, $query);
     $produk = mysqli_fetch_assoc($result);
-    // Validasi jumlah yang dimasukkan tidak melebihi ketersediaan barang
     if ($jumlah > $produk['jumlah']) {
-        return false; // Jika melebihi, kembalikan false
+        return false; 
     } else {
-        $produk['jumlah'] = $jumlah; // Set jumlah produk
+        $produk['jumlah'] = $jumlah;
         return $produk;
     }
 }
 
-// Fungsi untuk mengurangi jumlah produk dari struk
 function kurangiProduk($index) {
     $struk = isset($_SESSION['struk']) ? $_SESSION['struk'] : [];
     unset($struk[$index]);
     $_SESSION['struk'] = array_values($struk);
 }
-
-// Fungsi untuk mengecek apakah produk sudah ada di struk
 function cekProduk($produk, $struk) {
     foreach ($struk as $index => $item) {
         if ($item['id'] == $produk['id']) {
@@ -56,15 +50,12 @@ $struk = isset($_SESSION['struk']) ? $_SESSION['struk'] : [];
 $totalHarga = isset($_SESSION['totalHarga']) ? $_SESSION['totalHarga'] : 0;
 $error = '';
 
-// Variabel untuk menampung hasil pencarian produk
 $rows = [];
 
-// Jika ada data yang dikirimkan melalui metode POST (untuk pencarian)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['keyword'])) {
     $keyword = $_POST['keyword'];
     $rows = cariProduk($keyword);
 } else {
-    // Jika tidak ada pencarian, ambil semua data produk
     $query = "SELECT * FROM products";
     $result = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($result)) {
@@ -72,24 +63,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['keyword'])) {
     }
 }
 
-// Jika tombol "Tambah" ditekan
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && isset($_GET['tambah'])) {
     $id_produk = $_GET['id'];
-    $jumlah = isset($_GET['jumlah']) ? $_GET['jumlah'] : 1; // Ambil jumlah yang ditentukan, default 1 jika tidak ada
+    $jumlah = isset($_GET['jumlah']) ? $_GET['jumlah'] : 1;
     $produk = tambahkanProduk($id_produk, $jumlah);
     if ($produk === false) {
         $error = 'Jumlah produk melebihi ketersediaan!';
     } else {
-        // Periksa apakah produk sudah ada di struk
         $index = cekProduk($produk, $struk);
         if ($index != -1) {
-            // Jika sudah ada, tambahkan jumlahnya
             $struk[$index]['jumlah'] += $jumlah;
         } else {
-            // Jika belum ada, tambahkan produk baru ke struk
             array_push($struk, $produk);
         }
-        // Hitung kembali total harga
         $totalHarga = 0;
         foreach ($struk as $item) {
             $totalHarga += $item['harga_produk'] * $item['jumlah'];
@@ -99,30 +85,24 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id']) && isset($_GET['ta
     }
 }
 
-// Jika tombol "Kurang" ditekan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kurang'])) {
     $index = $_POST['index'];
     kurangiProduk($index);
-    header("Location: " . $_SERVER['PHP_SELF']); // Redirect kembali ke halaman ini
+    header("Location: " . $_SERVER['PHP_SELF']); 
 }
 
-// Jika tombol "Cetak dan Simpan" ditekan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cetak'])) {
-    // Pastikan $uang dan $kembalian_transaksi didefinisikan dan tidak kosong
     if (isset($_POST['uang']) && isset($_POST['kembalian'])) {
         $uang = $_POST['uang'];
         $kembalian_transaksi = $_POST['kembalian'];
 
-        // Simpan transaksi ke dalam tabel 'transaksi' dengan total harga
         $query_transaksi = "INSERT INTO transaksi (uang_pelanggan, kembalian, total_harga) VALUES ($uang, $kembalian_transaksi, $totalHarga)";
         $result_transaksi = mysqli_query($conn, $query_transaksi);
         if (!$result_transaksi) {
             $error = 'Gagal menyimpan transaksi!';
         } else {
-            // Ambil ID transaksi terakhir
             $id_transaksi = mysqli_insert_id($conn);
 
-            // Simpan informasi produk ke dalam tabel transaksi_produk
             foreach ($struk as $produk) {
                 $nama_produk = $produk['nama_produk'];
                 $harga_produk = $produk['harga_produk'];
@@ -130,47 +110,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cetak'])) {
                 $kode_unik = $produk['kode_unik'];
                 $totalHargaProduk = $harga_produk * $jumlah;
                 
-                // Sesuaikan query INSERT untuk memasukkan nilai-nilai yang tepat ke dalam database
                 $query_produk = "INSERT INTO transaksi_produk (id_transaksi, nama_produk, harga_produk, jumlah, kode_unik, total_harga) VALUES ($id_transaksi, '$nama_produk', $harga_produk, $jumlah, '$kode_unik', $totalHargaProduk)";
                 $result_produk = mysqli_query($conn, $query_produk);
                 if (!$result_produk) {
                     $error = 'Gagal menyimpan informasi produk dalam transaksi!';
-                    break; // Keluar dari loop jika gagal menyimpan
+                    break; 
                 }
 
-                // Kurangi jumlah produk dari tabel products
                 $query_update_produk = "UPDATE products SET jumlah = jumlah - $jumlah WHERE nama_produk = '$nama_produk'";
                 $result_update_produk = mysqli_query($conn, $query_update_produk);
                 if (!$result_update_produk) {
                     $error = 'Gagal mengurangi jumlah produk!';
-                    break; // Keluar dari loop jika gagal mengurangi jumlah
+                    break; 
                 }
             }
 
-            // Bersihkan struk dan total harga
             $_SESSION['struk'] = [];
             $_SESSION['totalHarga'] = 0;
             $struk = [];
             $totalHarga = 0;
 
-            // Redirect ke halaman cetak struk dengan menyertakan ID transaksi
             header("Location: cetak_struk.php?id_transaksi=$id_transaksi");
-            exit(); // Pastikan tidak ada output sebelum redirection
+            exit(); 
         }
     } else {
-        // Jika $uang atau $kembalian_transaksi kosong, berikan pesan kesalahan
         $error = "Mohon lengkapi informasi uang dan kembalian.";
     }
 }
 
-// Jika tombol "Perbarui Transaksi" ditekan
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['refresh'])) {
-    // Bersihkan struk dan total harga
     $_SESSION['struk'] = [];
     $_SESSION['totalHarga'] = 0;
     $struk = [];
     $totalHarga = 0;
-    // Redirect untuk merefresh halaman
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
@@ -185,11 +157,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['refresh'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 
-    <!-- CSS khusus untuk pencetakan struk -->
     <style media="print">
         @page {
-            size: auto;   /* auto is the current printer page size */
-            margin: 0;     /* this affects the margin in the printer settings */
+            size: auto; 
+            margin: 0;     
         }
 
         body {
@@ -259,13 +230,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['refresh'])) {
             padding: 20px;
         }
 
-        /* Sesuaikan dengan selector yang tepat untuk bagian struk */
         .struk-print {
             border: 1px solid black;
             padding: 10px;
         }
 
-        /* Sembunyikan tombol cetak ketika mencetak */
         .no-print {
             display: none;
         }

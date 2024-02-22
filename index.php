@@ -54,7 +54,7 @@ $conn->close();
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
         }
         .card-header {
-            background-color: grey;
+            background-color: #c9c4c3;
             color: #fff;
             border-radius: 15px 15px 0 0;
         }
