@@ -84,7 +84,7 @@ $conn->close();
                 <div class="card">
                     <div class="card-header">
                         <div class="logo">
-                            <img src="img/logo.png" alt="Logo">
+                            <img src="assets/img/logo.png" alt="Logo">
                         </div>
                     </div>
                     <div class="card-body">

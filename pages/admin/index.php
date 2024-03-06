@@ -2,17 +2,15 @@
 session_start();
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
 
-include_once '../db/db_config.php';
+include_once '../../db/db_config.php';
 
 // Tambah DATA atau Create
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
-    $nama_produk = $_POST['nama_produk'];
-    // Hilangkan tanda titik dari input harga sebelum menyimpannya
-    $harga_produk = str_replace('.', '', $_POST['harga_produk']);
-    $jumlah = $_POST['jumlah'];
-    $kode_unik = $_POST['kode_unik'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
     
-    $query = "INSERT INTO products (nama_produk, harga_produk, created_at, updated_at, jumlah, kode_unik) VALUES ('$nama_produk', $harga_produk, NOW(), NOW(), $jumlah, '$kode_unik')";
+    $query = "INSERT INTO users (username, password, role) VALUES ('$username', '$password', '$role')";
     $result = mysqli_query($conn, $query);
     if ($result) {
         header("Location: $_SERVER[PHP_SELF]");
@@ -25,13 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
 // Edit atau Update
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
     $id = $_POST['id'];
-    $nama_produk = $_POST['nama_produk'];
-    // Hilangkan tanda titik dari input harga sebelum menyimpannya
-    $harga_produk = str_replace('.', '', $_POST['harga_produk']);
-    $jumlah = $_POST['jumlah'];
-    $kode_unik = $_POST['kode_unik'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
     
-    $query = "UPDATE products SET nama_produk='$nama_produk', harga_produk=$harga_produk, updated_at=NOW(), jumlah=$jumlah, kode_unik='$kode_unik' WHERE id=$id";
+    $query = "UPDATE users SET username='$username', password='$password', role='$role' WHERE id='$id'";
     $result = mysqli_query($conn, $query);
     if ($result) {
         header("Location: $_SERVER[PHP_SELF]");
@@ -45,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
 if (isset($_GET['hapus'])) {
     $id = $_GET['hapus'];
     
-    $query = "DELETE FROM products WHERE id=$id";
+    $query = "DELETE FROM users WHERE id='$id'";
     $result = mysqli_query($conn, $query);
     if ($result) {
         header("Location: $_SERVER[PHP_SELF]");
@@ -56,7 +52,7 @@ if (isset($_GET['hapus'])) {
 }
 
 // Ambil semua data atau READ data
-$query = "SELECT * FROM products";
+$query = "SELECT * FROM users";
 $result = mysqli_query($conn, $query);
 $rows = [];
 while ($row = mysqli_fetch_assoc($result)) {
@@ -64,24 +60,19 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 // Data untuk mode edit
-$edit_nama_produk = '';
-$edit_harga_produk = '';
-$edit_jumlah = '';
-$edit_kode_unik = '';
+$edit_username = '';
+$edit_password = '';
+$edit_role = '';
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $query = "SELECT * FROM products WHERE id=$id";
+    $query = "SELECT * FROM users WHERE id='$id'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
-    $edit_nama_produk = $row['nama_produk'];
-    // Menggunakan number_format untuk mengatur format harga_produk tanpa desimal .00
-    $edit_harga_produk = number_format($row['harga_produk'], 0, ',', '');
-    $edit_jumlah = $row['jumlah'];
-    $edit_kode_unik = $row['kode_unik'];
+    $edit_username = $row['username'];
+    $edit_password = $row['password'];
+    $edit_role = $row['role'];
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -150,35 +141,35 @@ if (isset($_GET['id'])) {
         .logout-link:hover {
             color: #f8d7da !important;
         }
-        .btn-tambah-produk {
+        .btn-tambah-kasir {
             background-color: #28a745;
             border-color: #28a745;
         }
-        .btn-tambah-produk:hover {
+        .btn-tambah-kasir:hover {
             background-color: #218838;
             border-color: #1e7e34;
         }
-        .btn-edit-produk {
+        .btn-edit-kasir {
             background-color: #007bff;
             border-color: #007bff;
         }
-        .btn-edit-produk:hover {
+        .btn-edit-kasir:hover {
             background-color: #0069d9;
             border-color: #0062cc;
         }
-        .btn-batal-edit-produk {
+        .btn-batal-edit-kasir {
             background-color: #dc3545;
             border-color: #dc3545;
         }
-        .btn-batal-edit-produk:hover {
+        .btn-batal-edit-kasir:hover {
             background-color: #c82333;
             border-color: #bd2130;
         }
         .mb-4 {
-            background-color: orangered;
-            color: #fff;
-            padding: 10px;
-        }
+    background-color: orangered;
+    color: #fff;
+    padding: 10px;
+}
 
     </style>
 </head>
@@ -190,79 +181,74 @@ if (isset($_GET['id'])) {
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item <?php echo ($role === 'admin') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="../admin">Kelola Akun</a>
+                    <a class="nav-link" href="index.php">Kelola Akun</a>
                 </li>
                 <li class="nav-item <?php echo ($role === 'admin' || $role === 'owner') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="activity/log_activity.php">Log Activity</a>
+                    <a class="nav-link" href="../activity/log_activity.php">Log Activity</a>
                 </li>
-                <li class="nav-item <?php echo ($role === 'admin' || $role === 'owner' || $role === 'kasir') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="transaksi/">Transaksi</a>
+                <li class="nav-item <?php echo ($role === 'admin' || $role === 'kasir') ? '' : 'd-none'; ?>">
+                    <a class="nav-link" href="../transaksi/">Transaksi</a>
                 </li>
                 <li class="nav-item <?php echo ($role === 'admin') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="produk">Data Produk</a>
-                </li>
-                <li class="nav-item <?php echo ($role === 'owner') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="owner/laporan.php">Laporan</a>
+                    <a class="nav-link" href="../product/">Data Produk</a>
                 </li>
             </ul>
             <ul class="nav flex-column mt-auto">
                 <li class="nav-item">
-                    <a class="nav-link logout-link" href="../auth/logout.php">Logout</a>
+                    <a class="nav-link logout-link" href="../../auth/logout.php">Keluar</a>
                 </li>
             </ul>
         </div>
         <div class="content">
             <div class="container">
                 <div class="form-container">
-                    <h2 class="mb-4"><?php echo isset($_GET['id']) ? 'Edit Produk' : 'Tambah Produk'; ?></h2>
+                    <h2 class="mb-4"><?php echo isset($_GET['id']) ? 'Edit Akun' : 'Tambah Akun'; ?></h2>
                     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                         <?php if (isset($_GET['id'])) : ?>
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
                         <?php endif; ?>
                         <div class="mb-3">
-                            <label for="nama_produk" class="form-label">Nama Produk:</label>
-                            <input type="text" name="nama_produk" class="form-control" value="<?php echo $edit_nama_produk; ?>" required>
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" name="username" class="form-control" value="<?php echo $edit_username; ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label for="harga_produk" class="form-label">Harga Produk:</label>
-                            <input type="text" id="inputHarga" name="harga_produk" class="form-control" value="<?php echo $edit_harga_produk; ?>" required>
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" name="password" class="form-control" value="<?php echo $edit_password; ?>" required>
                         </div>
                         <div class="mb-3">
-                            <label for="jumlah" class="form-label">Jumlah:</label>
-                            <input type="number" name="jumlah" class="form-control" value="<?php echo $edit_jumlah; ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kode_unik" class="form-label">Kode Unik:</label>
-                            <input type="text" name="kode_unik" class="form-control" value="<?php echo $edit_kode_unik; ?>" required>
+                            <label for="role" class="form-label">Role:</label>
+                            <select name="role" class="form-select" required>
+                                <option value="kasir" <?php echo ($edit_role === 'kasir') ? 'selected' : ''; ?>>Kasir</option>
+                                <option value="admin" <?php echo ($edit_role === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                                <option value="owner" <?php echo ($edit_role === 'owner') ? 'selected' : ''; ?>>Owner</option>
+                            </select>
                         </div>
                         <?php if (isset($_GET['id'])) : ?>
-                            <button type="submit" name="edit" class="btn btn-edit-produk">Simpan</button>
-                            <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="btn btn-batal-edit-produk">Batal Edit</a>
+                            <button type="submit" name="edit" class="btn btn-edit-kasir">Simpan</button>
+                            <a href="<?php echo $_SERVER['PHP_SELF']; ?>" class="btn btn-batal-edit-kasir">Batal Edit</a>
                         <?php else : ?>
-                            <button type="submit" name="tambah" class="btn btn-tambah-produk">Simpan</button>
+                            <button type="submit" name="tambah" class="btn btn-tambah-kasir">Simpan</button>
                         <?php endif; ?>
                     </form>
                 </div>
                 <div class="table-container">
-                    <h2 class="mt-5">Data Produk</h2>
+                    <h2 class="mt-5">Data Kasir</h2>
+                    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari...">
                     <table class="table table-striped mt-3">
                         <thead>
                             <tr>
-                                <th scope="col">Nama Produk</th>
-                                <th scope="col">Harga Produk</th>
-                                <th scope="col">Jumlah</th>
-                                <th scope="col">Kode Unik</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Role</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($rows as $row) : ?>
                                 <tr>
-                                    <td><?php echo $row['nama_produk']; ?></td>
-                                    <!-- Tampilkan harga dengan pemisah ribuan -->
-                                    <td>Rp <?php echo number_format($row['harga_produk'], 0, ',', '.'); ?></td>
-                                    <td><?php echo $row['jumlah']; ?></td>
-                                    <td><?php echo $row['kode_unik']; ?></td>
+                                    <td><?php echo $row['username']; ?></td>
+                                    <td><?php echo $row['password']; ?></td>
+                                    <td><?php echo $row['role']; ?></td>
                                     <td>
                                         <a href="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $row['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
                                         <a href="<?php echo $_SERVER['PHP_SELF'] . '?hapus=' . $row['id']; ?>" class="btn btn-sm btn-danger">Hapus</a>
@@ -275,25 +261,27 @@ if (isset($_GET['id'])) {
             </div>
         </div>
     </div>
-
-    <script>
-        // Mendapatkan input harga
-        var inputHarga = document.getElementById('inputHarga');
-
-        // Menambahkan event listener untuk input
-        inputHarga.addEventListener('input', function(event) {
-            // Mengambil nilai yang dimasukkan pengguna
-            var nilai = event.target.value;
-
-            // Menghapus titik dan koma dari nilai untuk memastikan bahwa kita menghapusnya terlebih dahulu sebelum menambahkan yang baru
-            nilai = nilai.replace(/\./g, '').replace(/,/g, '');
-
-            // Menambahkan titik setiap tiga digit dari kanan
-            nilai = nilai.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-            // Menetapkan nilai yang telah diformat kembali ke input
-            event.target.value = nilai;
-        });
-    </script>
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchInput');
+        const tableRows = document.querySelectorAll('.table tbody tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.trim().toLowerCase();
+
+            tableRows.forEach(row => {
+                const username = row.cells[0].textContent.trim().toLowerCase();
+                const password = row.cells[1].textContent.trim().toLowerCase();
+                const role = row.cells[2].textContent.trim().toLowerCase();
+
+                if (username.includes(searchTerm) || password.includes(searchTerm) || role.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>

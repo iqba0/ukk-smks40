@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once '../db/db_config.php';
+include_once '../../db/db_config.php';
 
 // Periksa apakah ID transaksi disediakan dalam parameter GET
 if (!isset($_GET['id_transaksi'])) {
