@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 19 Feb 2024 pada 06.44
--- Versi server: 10.4.25-MariaDB
--- Versi PHP: 8.1.10
+-- Waktu pembuatan: 06 Mar 2024 pada 07.08
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,21 +18,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ukk`
+-- Database: `ukk_kasir`
 --
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `log_activity`
---
-
-CREATE TABLE `log_activity` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `activity` text NOT NULL,
-  `tanggal_waktu` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -48,15 +35,16 @@ CREATE TABLE `products` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `jumlah` int(11) NOT NULL,
   `kode_unik` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `products`
 --
 
 INSERT INTO `products` (`id`, `nama_produk`, `harga_produk`, `created_at`, `updated_at`, `jumlah`, `kode_unik`) VALUES
-(1, 'ASUS A43J', '6000000.00', '2024-02-16 03:30:22', '2024-02-19 04:57:50', 95, 'LT001'),
-(4, 'ASUS A43JSA', '6000000.00', '2024-02-16 04:11:29', '2024-02-19 04:57:50', 91, 'LT003');
+(1, 'ASUS A43J', 6000000.00, '2024-02-16 03:30:22', '2024-03-06 04:02:04', 86, 'LT001'),
+(4, 'ASUS A43JSA', 6000000.00, '2024-02-16 04:11:29', '2024-02-19 04:57:50', 91, 'LT003'),
+(5, 'Axioo', 5000000.00, '2024-03-05 03:46:21', '2024-03-06 05:56:20', 40, 'LT004');
 
 -- --------------------------------------------------------
 
@@ -75,14 +63,13 @@ CREATE TABLE `transaksi` (
   `kembalian` int(11) NOT NULL,
   `tanggal_pembuatan` timestamp NOT NULL DEFAULT current_timestamp(),
   `tanggal_modifikasi` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `transaksi`
 --
 
 INSERT INTO `transaksi` (`id`, `nama_produk`, `harga_produk`, `jumlah`, `kode_unik`, `total_harga`, `uang_pelanggan`, `kembalian`, `tanggal_pembuatan`, `tanggal_modifikasi`) VALUES
-(1, 'ASUS A43J', 6000000, 2, 'LT001', 12000000, 0, 0, '2024-02-16 10:22:45', '2024-02-16 10:22:45'),
 (2, 'ASUS A43J', 6000000, 1, 'LT001', 16000000, 0, 0, '2024-02-16 10:33:02', '2024-02-16 10:33:02'),
 (3, 'ASUS A43JSA', 10000000, 1, 'LT003', 16000000, 0, 0, '2024-02-16 10:33:02', '2024-02-16 10:33:02'),
 (4, 'ASUS A43J', 6000000, 1, 'LT001', 6000000, 0, 0, '2024-02-16 10:41:51', '2024-02-16 10:41:51'),
@@ -158,22 +145,28 @@ INSERT INTO `transaksi` (`id`, `nama_produk`, `harga_produk`, `jumlah`, `kode_un
 (74, '', 0, 0, '', 0, 1000000088, 984000088, '2024-02-19 02:09:56', '2024-02-19 02:09:56'),
 (75, 'ASUS A43J', 6000000, 1, 'LT001', 6000000, 0, 0, '2024-02-19 02:09:56', '2024-02-19 02:09:56'),
 (76, 'ASUS A43JSA', 10000000, 1, 'LT003', 10000000, 0, 0, '2024-02-19 02:09:56', '2024-02-19 02:09:56'),
-(77, '', 0, 0, '', 0, 100000008, 84000008, '2024-02-19 02:31:42', '2024-02-19 02:31:42'),
-(78, '', 0, 0, '', 0, 100000009, 74000009, '2024-02-19 02:38:18', '2024-02-19 02:38:18'),
-(79, '', 0, 0, '', 0, 100000008, 84000008, '2024-02-19 02:42:31', '2024-02-19 02:42:31'),
-(80, '', 0, 0, '', 0, 100000000, 90000000, '2024-02-19 02:43:31', '2024-02-19 02:43:31'),
-(81, '', 0, 0, '', 0, 100000007, 90000007, '2024-02-19 02:46:27', '2024-02-19 02:46:27'),
-(82, '', 0, 0, '', 0, 100000007, 90000007, '2024-02-19 02:50:10', '2024-02-19 02:50:10'),
-(83, '', 0, 0, '', 16000000, 100000009, 84000009, '2024-02-19 03:00:26', '2024-02-19 03:00:26'),
-(84, '', 0, 0, '', 200000000, 1000000000, 800000000, '2024-02-19 03:05:05', '2024-02-19 03:05:05'),
-(85, '', 0, 0, '', 200000000, 1000000000, 800000000, '2024-02-19 03:11:37', '2024-02-19 03:11:37'),
-(86, '', 0, 0, '', 12000000, 1000000088, 988000088, '2024-02-19 03:31:35', '2024-02-19 03:31:35'),
-(87, '', 0, 0, '', 12000000, 100000007, 88000007, '2024-02-19 03:32:46', '2024-02-19 03:32:46'),
-(88, '', 0, 0, '', 12000000, 100000007, 88000007, '2024-02-19 03:37:58', '2024-02-19 03:37:58'),
-(89, '', 0, 0, '', 18000000, 100000008, 82000008, '2024-02-19 03:41:06', '2024-02-19 03:41:06'),
-(90, '', 0, 0, '', 12000000, 100000009, 88000009, '2024-02-19 04:48:03', '2024-02-19 04:48:03'),
-(91, '', 0, 0, '', 6000000, 100000008, 94000008, '2024-02-19 04:48:21', '2024-02-19 04:48:21'),
-(92, '', 0, 0, '', 12000000, 100000000, 88000000, '2024-02-19 04:57:50', '2024-02-19 04:57:50');
+(81, '', 0, 0, '', 0, 100000007, 90000007, '2024-02-19 02:46:27', '2024-02-19 02:46:27');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `transaksi_log`
+--
+
+CREATE TABLE `transaksi_log` (
+  `id` int(11) NOT NULL,
+  `id_transaksi` int(11) NOT NULL,
+  `barang_dijual` text DEFAULT NULL,
+  `aktivitas` varchar(255) NOT NULL,
+  `waktu` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `transaksi_log`
+--
+
+INSERT INTO `transaksi_log` (`id`, `id_transaksi`, `barang_dijual`, `aktivitas`, `waktu`) VALUES
+(1, 94, NULL, 'Insert', '2024-03-06 02:38:11');
 
 -- --------------------------------------------------------
 
@@ -189,38 +182,7 @@ CREATE TABLE `transaksi_produk` (
   `jumlah` int(11) NOT NULL,
   `kode_unik` varchar(50) NOT NULL,
   `total_harga` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `transaksi_produk`
---
-
-INSERT INTO `transaksi_produk` (`id`, `id_transaksi`, `nama_produk`, `harga_produk`, `jumlah`, `kode_unik`, `total_harga`) VALUES
-(1, 77, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(2, 77, 'ASUS A43JSA', '10000000.00', 1, 'LT003', '10000000.00'),
-(3, 78, 'ASUS A43JSA', '10000000.00', 2, 'LT003', '20000000.00'),
-(4, 78, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(5, 79, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(6, 79, 'ASUS A43JSA', '10000000.00', 1, 'LT003', '10000000.00'),
-(7, 80, 'ASUS A43JSA', '10000000.00', 1, 'LT003', '10000000.00'),
-(9, 82, 'ASUS A43JSA', '10000000.00', 1, 'LT003', '10000000.00'),
-(10, 83, 'ASUS A43JSA', '10000000.00', 1, 'LT003', '10000000.00'),
-(11, 83, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(12, 84, 'ASUS A43J', '99999999.99', 1, 'LT001', '99999999.99'),
-(13, 84, 'ASUS A43JSA', '99999999.99', 1, 'LT003', '99999999.99'),
-(14, 85, 'ASUS A43J', '99999999.99', 1, 'LT001', '99999999.99'),
-(15, 85, 'ASUS A43JSA', '99999999.99', 1, 'LT003', '99999999.99'),
-(16, 86, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(17, 86, 'ASUS A43JSA', '6000000.00', 1, 'LT003', '6000000.00'),
-(18, 87, 'ASUS A43JSA', '6000000.00', 2, 'LT003', '12000000.00'),
-(19, 88, 'ASUS A43JSA', '6000000.00', 2, 'LT003', '12000000.00'),
-(20, 89, 'ASUS A43J', '6000000.00', 2, 'LT001', '12000000.00'),
-(21, 89, 'ASUS A43JSA', '6000000.00', 1, 'LT003', '6000000.00'),
-(22, 90, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(23, 90, 'ASUS A43JSA', '6000000.00', 1, 'LT003', '6000000.00'),
-(24, 91, 'ASUS A43JSA', '6000000.00', 1, 'LT003', '6000000.00'),
-(25, 92, 'ASUS A43J', '6000000.00', 1, 'LT001', '6000000.00'),
-(26, 92, 'ASUS A43JSA', '6000000.00', 1, 'LT003', '6000000.00');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -233,7 +195,7 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','kasir','owner') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `users`
@@ -241,22 +203,12 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
 (1, 'admin', '123', 'admin'),
-(2, 'galang12', '11', 'kasir'),
-(3, 'bos', '123', 'owner'),
-(4, 'rendie', '11', 'owner'),
-(5, 'angela', '11', 'kasir'),
-(7, 'arifin', '123', 'owner');
+(9, 'kasir', '123', 'kasir'),
+(10, 'owner', '123', 'owner');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indeks untuk tabel `log_activity`
---
-ALTER TABLE `log_activity`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indeks untuk tabel `products`
@@ -268,6 +220,12 @@ ALTER TABLE `products`
 -- Indeks untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `transaksi_log`
+--
+ALTER TABLE `transaksi_log`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -288,50 +246,44 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT untuk tabel `log_activity`
---
-ALTER TABLE `log_activity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+
+--
+-- AUTO_INCREMENT untuk tabel `transaksi_log`
+--
+ALTER TABLE `transaksi_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `transaksi_produk`
 --
 ALTER TABLE `transaksi_produk`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Ketidakleluasaan untuk tabel `log_activity`
---
-ALTER TABLE `log_activity`
-  ADD CONSTRAINT `log_activity_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
-
---
 -- Ketidakleluasaan untuk tabel `transaksi_produk`
 --
 ALTER TABLE `transaksi_produk`
-  ADD CONSTRAINT `transaksi_produk_ibfk_1` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`);
+  ADD CONSTRAINT `transaksi_produk_ibfk_1` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
