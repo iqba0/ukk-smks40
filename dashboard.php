@@ -1,3 +1,7 @@
+<!--  skrip ini bertujuan untuk 
+memeriksa apakah pengguna memiliki peran yang diperlukan (diasumsikan bahwa peran disimpan dalam variabel sesi 'role'). 
+Jika tidak, 
+akan dialihkan kembali ke halaman utama atau indeks (index.php) dan eksekusi skrip akan berhenti setelahnya. -->
 <?php
 session_start();
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
