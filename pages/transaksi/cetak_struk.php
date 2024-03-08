@@ -2,7 +2,7 @@
 session_start();
 include_once '../../db/db_config.php';
 
-// Periksa apakah ID transaksi disediakan dalam parameter GET
+// Memeriksa apakah ID transaksi disediakan dalam parameter GET
 if (!isset($_GET['id_transaksi'])) {
     echo "ID transaksi tidak ditemukan.";
     exit();
@@ -13,7 +13,7 @@ $id_transaksi = $_GET['id_transaksi'];
 $query = "SELECT * FROM transaksi_produk WHERE id_transaksi = $id_transaksi";
 $result = mysqli_query($conn, $query);
 
-// Pastikan data transaksi ditemukan
+// Memastikan data transaksi ditemukan
 if (mysqli_num_rows($result) == 0) {
     echo "Data transaksi tidak ditemukan.";
     exit();
@@ -26,7 +26,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $totalHarga += $row['total_harga'];
 }
 
-// Ambil data uang pelanggan dan kembalian dari database
+// Mengambil data uang pelanggan dan kembalian dari database
 $query_transaksi = "SELECT * FROM transaksi WHERE id = $id_transaksi";
 $result_transaksi = mysqli_query($conn, $query_transaksi);
 if (!$result_transaksi) {

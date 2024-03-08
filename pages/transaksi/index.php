@@ -387,7 +387,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['refresh'])) {
     </div>
     
 
-    <!-- JavaScript untuk mencetak struk -->
+    <!-- JavaScript untuk cetak struk -->
     <script>
         function printStruk() {
             window.print();

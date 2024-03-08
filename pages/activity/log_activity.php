@@ -46,7 +46,6 @@ if (!$result) {
     <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Gaya dari navbar */
         body {
             margin: 0;
             padding: 0;
@@ -111,13 +110,12 @@ if (!$result) {
 <body>
     <div class="container-fluid">
         <div class="sidebar">
-            <!-- Navbar disisipkan di sini -->
             <div class="sidebar-header">
                 <h3>Dashboard</h3>
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item <?php echo ($role === 'admin') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="index.php">Kelola Akun</a>
+                    <a class="nav-link" href="../admin/">Kelola Akun</a>
                 </li>
                 <li class="nav-item <?php echo ($role === 'admin' || $role === 'owner') ? '' : 'd-none'; ?>">
                     <a class="nav-link" href="../activity/log_activity.php">Log Activity</a>

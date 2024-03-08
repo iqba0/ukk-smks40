@@ -7,7 +7,7 @@ include_once '../../db/db_config.php';
 // Tambah DATA atau Create
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
     $nama_produk = $_POST['nama_produk'];
-    // Hilangkan tanda titik dari input harga sebelum menyimpannya
+    // Menghilangkan tanda titik dari input harga sebelum menyimpannya
     $harga_produk = str_replace('.', '', $_POST['harga_produk']);
     $jumlah = $_POST['jumlah'];
     $kode_unik = $_POST['kode_unik'];
