@@ -80,6 +80,9 @@ if (isset($_GET['id'])) {
     $edit_kode_unik = $row['kode_unik'];
 }
 
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'nama_produk'; // Define $sort variable here
+$order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+
 ?>
 
 <!DOCTYPE html>
@@ -243,55 +246,159 @@ if (isset($_GET['id'])) {
                 </div>
                 <div class="table-container">
                     <h2 class="mt-5">Data Produk</h2>
+                    <!-- Bagian atas tabel -->
+                    <div class="mb-3">
+                        <label for="search" class="form-label">Cari:</label>
+                        <input type="text" id="search" class="form-control">
+                    </div>
+                    <!-- Akhir bagian atas tabel -->
                     <table class="table table-striped mt-3">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nama Produk</th>
-                                <th scope="col">Harga Produk</th>
-                                <th scope="col">Jumlah</th>
-                                <th scope="col">Kode Unik</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($rows as $row) : ?>
-                                <tr>
-                                    <td><?php echo $row['nama_produk']; ?></td>
-                                    <!-- Tampilkan harga dengan pemisah ribuan -->
-                                    <td>Rp <?php echo number_format($row['harga_produk'], 0, ',', '.'); ?></td>
-                                    <td><?php echo $row['jumlah']; ?></td>
-                                    <td><?php echo $row['kode_unik']; ?></td>
-                                    <td>
-                                        <a href="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $row['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
-                                        <a href="<?php echo $_SERVER['PHP_SELF'] . '?hapus=' . $row['id']; ?>" class="btn btn-sm btn-danger">Hapus</a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+<thead>
+    <tr>
+    <th scope="col">
+    <a href="#" onclick="sortTable(0)">Nama Produk <?php echo ($sort === 'nama_produk') ? ($order === 'asc' ? '<i class="bi bi-caret-up-fill"></i>' : '<i class="bi bi-caret-down-fill"></i>') : ''; ?></a>
+</th>
+<th scope="col">
+    <a href="#" onclick="sortTable(1)">Harga Produk <?php echo ($sort === 'harga_produk') ? ($order === 'asc' ? '<i class="bi bi-caret-up-fill"></i>' : '<i class="bi bi-caret-down-fill"></i>') : ''; ?></a>
+</th>
+<th scope="col">
+    <a href="#" onclick="sortTable(2)">Jumlah <?php echo ($sort === 'jumlah') ? ($order === 'asc' ? '<i class="bi bi-caret-up-fill"></i>' : '<i class="bi bi-caret-down-fill"></i>') : ''; ?></a>
+</th>
+<th scope="col">
+    <a href="#" onclick="sortTable(3)">Kode Unik <?php echo ($sort === 'kode_unik') ? ($order === 'asc' ? '<i class="bi bi-caret-up-fill"></i>' : '<i class="bi bi-caret-down-fill"></i>') : ''; ?></a>
+</th>
+
+
+    </tr>
+</thead>
+
+                    <tbody>
+                        <?php
+                        // Tambahkan kode ini untuk memfilter data berdasarkan pencarian
+                        $search = isset($_GET['search']) ? $_GET['search'] : '';
+                        $rows_filtered = array_filter($rows, function($row) use ($search) {
+                            return stripos($row['nama_produk'], $search) !== false ||
+                                stripos($row['kode_unik'], $search) !== false;
+                        });
+
+                        // Tambahkan kode ini untuk mengurutkan data berdasarkan kolom yang dipilih
+                        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'nama_produk';
+                        $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
+                        usort($rows_filtered, function($a, $b) use ($sort, $order) {
+                            return $order === 'asc' ? $a[$sort] <=> $b[$sort] : $b[$sort] <=> $a[$sort];
+                        });
+
+                        foreach ($rows_filtered as $row) :
+                        ?>
+                        <tr>
+                            <td><?php echo $row['nama_produk']; ?></td>
+                            <!-- Tampilkan harga dengan pemisah ribuan -->
+                            <td>Rp <?php echo number_format($row['harga_produk'], 0, ',', '.'); ?></td>
+                            <td><?php echo $row['jumlah']; ?></td>
+                            <td><?php echo $row['kode_unik']; ?></td>
+                            <td>
+                                <!-- Bagian aksi -->
+                                <?php
+                                $self = $_SERVER['PHP_SELF'];
+                                $id = $row['id'];
+                                $edit_link = "$self?id=$id";
+                                $delete_link = "$self?hapus=$id";
+                                ?>
+                                <a href="<?php echo $edit_link; ?>" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="<?php echo $delete_link; ?>" class="btn btn-sm btn-danger">Hapus</a>
+                                <!-- Akhir bagian aksi -->
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Mendapatkan input harga
-        var inputHarga = document.getElementById('inputHarga');
+// Mendapatkan input pencarian
+var inputSearch = document.getElementById('search');
 
-        // Menambahkan event listener untuk input
-        inputHarga.addEventListener('input', function(event) {
-            // Mengambil nilai yang dimasukkan pengguna
-            var nilai = event.target.value;
+// Menambahkan event listener untuk input pencarian
+inputSearch.addEventListener('input', function(event) {
+    // Mendapatkan nilai yang dimasukkan pengguna
+    var searchValue = event.target.value.trim().toLowerCase();
 
-            // Menghapus titik dan koma dari nilai untuk memastikan bahwa kita menghapusnya terlebih dahulu sebelum menambahkan yang baru
-            nilai = nilai.replace(/\./g, '').replace(/,/g, '');
+    // Mengubah URL dengan menambahkan parameter pencarian
+    var url = new URL(window.location.href);
+    url.searchParams.set('search', searchValue);
+    window.history.replaceState(null, null, url);
 
-            // Menambahkan titik setiap tiga digit dari kanan
-            nilai = nilai.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // Memanggil fungsi untuk melakukan filter data
+    filterData(searchValue);
+});
 
-            // Menetapkan nilai yang telah diformat kembali ke input
-            event.target.value = nilai;
-        });
-    </script>
+// Memanggil fungsi untuk melakukan filter data saat halaman dimuat
+filterData('');
+
+// Fungsi untuk melakukan filter data
+function filterData(searchValue) {
+    // Mendapatkan semua baris data
+    var rows = document.querySelectorAll('.table tbody tr');
+
+    // Iterasi melalui setiap baris data
+    rows.forEach(function(row) {
+        // Mendapatkan nilai nama produk dan kode unik
+        var namaProduk = row.cells[0].textContent.toLowerCase();
+        var kodeUnik = row.cells[3].textContent.toLowerCase();
+
+        // Menyembunyikan baris jika tidak sesuai dengan kriteria pencarian
+        if (namaProduk.includes(searchValue) || kodeUnik.includes(searchValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Fungsi untuk mengatur pengurutan tabel
+function sortTable(column) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.querySelector('.table');
+    switching = true;
+    // Atur arah pengurutan
+    dir = "asc"; 
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[column];
+            y = rows[i + 1].getElementsByTagName("TD")[column];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount ++;      
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+    event.preventDefault(); // Mencegah perilaku default dari tautan
+}
+</script>
+
 </body>
 </html>
