@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['username'] = $row['username'];
         $_SESSION['role'] = $row['role'];
 
-        header("Location: ../dashboard.php");
+        header("Location: ../pages/dashboard.php");
         exit();
     } else {
         $loginError = "Invalid username or password";

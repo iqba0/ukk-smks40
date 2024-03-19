@@ -3,7 +3,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "ukk_kasir";
+$database = "db_cashier";
 
 $conn = mysqli_connect($host, $user, $password, $database);
 if (!$conn) {

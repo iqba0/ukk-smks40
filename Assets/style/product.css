@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+    overflow-x: hidden;
+}
+.btn-tambah-produk {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.btn-tambah-produk:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+.btn-edit-produk {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.btn-edit-produk:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+.btn-batal-edit-produk {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-batal-edit-produk:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+.mb-4 {
+    background-color: orangered;
+    color: #fff;
+    padding: 10px;
+}

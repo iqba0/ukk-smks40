@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['username'] = $row['username'];
         $_SESSION['role'] = $row['role'];
 
-        header("Location: dashboard.php");
+        header("Location: pages/dashboard");
         exit();
     } else {
         $loginError = "Invalid username or password";
@@ -43,40 +43,58 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
-        body {
-            background-color: #f8f9fa;
+     
+    body {
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-image: url('assets/img/bg.jpg');
+    }
+    .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/img/bg.jpg');
+            background-size: cover;
+            filter: blur(15px); /* Efek blur */
+            -webkit-filter: blur(5px); /* Untuk kompatibilitas dengan browser Safari */
+            z-index: -1; /* Agar latar belakang gambar berada di belakang elemen lain */
         }
-        .login-container {
-            margin-top: 100px;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            background-color: #c9c4c3;
-            color: #fff;
-            border-radius: 15px 15px 0 0;
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo img {
-            width: 150px;
-            height: auto;
-        }
-        .btn-outline-orange {
-            color: orange;
-            border-color: orange;
-        }
+    .login-container {
+        margin-top: 100px;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        opacity: 0.9;
+    }
+    .card-header {
+        background-color: #c9c4c3;
+        color: #fff;
+        border-radius: 15px 15px 0 0;
+    }
+    .logo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .logo img {
+        width: 150px;
+        height: auto;
+    }
+    .btn-outline-orange {
+        color: orange;
+        border-color: orange;
+    }
 
-        .btn-outline-orange:hover {
-            color: white;
-            background-color: orange;
-        }
-    </style>
+    .btn-outline-orange:hover {
+        color: white;
+        background-color: orange;
+    }
+</style>
 </head>
 <body>
     <div class="container">

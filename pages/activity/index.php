@@ -45,6 +45,7 @@ if (!$result) {
     <title>Log Aktivitas</title>
     <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/style/sidebar.css">
     <style>
         body {
             margin: 0;
@@ -57,84 +58,11 @@ if (!$result) {
             padding-right: 0;
             overflow-x: hidden;
         }
-        .sidebar {
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            padding-top: 3.5rem;
-            background-color: #343a40;
-            color: #fff;
-            z-index: 1;
-            overflow-y: auto;
-        }
-        .sidebar .nav-link {
-            padding: 10px 20px;
-            color: #fff;
-        }
-        .sidebar .nav-link:hover {
-            background-color: #495057;
-        }
-        .content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .sidebar-header {
-            background-color: #212529;
-            padding: 20px;
-            text-align: center;
-        }
-        .sidebar-header h3 {
-            margin-bottom: 0;
-            color: #fff;
-        }
-        .nav-item {
-            margin-bottom: 10px;
-        }
-        .nav-link {
-            color: #fff !important;
-            font-weight: bold;
-        }
-        .nav-link:hover {
-            color: #f8f9fa !important;
-        }
-        .logout-link {
-            color: #dc3545 !important;
-        }
-        .logout-link:hover {
-            color: #f8d7da !important;
-        }
     </style>
 </head>
 <body>
+    <?php include '../sidebar.php';?>
     <div class="container-fluid">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h3>Dashboard</h3>
-            </div>
-            <ul class="nav flex-column">
-                <li class="nav-item <?php echo ($role === 'admin') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="../admin/">Kelola Akun</a>
-                </li>
-                <li class="nav-item <?php echo ($role === 'admin' || $role === 'owner') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="../activity/log_activity.php">Log Activity</a>
-                </li>
-                <li class="nav-item <?php echo ($role === 'admin' || $role === 'kasir') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="../transaksi/">Transaksi</a>
-                </li>
-                <li class="nav-item <?php echo ($role === 'admin') ? '' : 'd-none'; ?>">
-                    <a class="nav-link" href="../product/">Data Produk</a>
-                </li>
-            </ul>
-            <ul class="nav flex-column mt-auto">
-                <li class="nav-item">
-                    <a class="nav-link logout-link" href="../../auth/logout.php">Keluar</a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Konten dari halaman log activity -->
         <div class="content">
             <h2 class="mt-5">Log Aktivitas Transaksi</h2>
             <div class="text-end mb-3">
