@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 19 Mar 2024 pada 04.29
+-- Waktu pembuatan: 19 Mar 2024 pada 05.21
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -123,7 +123,7 @@ INSERT INTO `transaksi_produk` (`id`, `id_transaksi`, `nama_produk`, `harga_prod
 CREATE TABLE `users` (
   `ID` int(20) NOT NULL,
   `username` varchar(20) NOT NULL,
-  `password` varchar(20) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `nama` varchar(20) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -138,7 +138,9 @@ INSERT INTO `users` (`ID`, `username`, `password`, `nama`, `created_at`, `update
 (2, 'admin', 'admin', 'admin', '2024-03-04 11:37:07', '2024-03-04 11:37:07', 'admin'),
 (11, 'iqbal', '123', 'iqbal', '2024-03-09 23:06:59', '2024-03-09 23:06:59', 'owner'),
 (12, 'kasir', 'kasir', 'kair', '2024-03-19 03:11:51', '2024-03-19 03:11:51', 'kasir'),
-(13, 'iqbal', 'eedae20fc3c7a6e9c5b1', 'iqbal', '2024-03-19 03:14:21', '2024-03-19 03:14:21', 'admin');
+(13, 'iqbal', 'eedae20fc3c7a6e9c5b1', 'iqbal', '2024-03-19 03:14:21', '2024-03-19 03:14:21', 'admin'),
+(14, 'admin1', '202cb962ac59075b964b', 'admin1', '2024-03-19 03:56:20', '2024-03-19 03:56:20', 'admin'),
+(15, 'admin2', '202cb962ac59075b964b07152d234b70', 'admin2', '2024-03-19 04:20:54', '2024-03-19 04:20:54', 'admin');
 
 --
 -- Indexes for dumped tables
@@ -201,7 +203,7 @@ ALTER TABLE `transaksi_produk`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

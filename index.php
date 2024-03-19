@@ -5,21 +5,17 @@ include 'db/db_config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = md5($_POST['password']); // MD5-kan password
 
     $stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
-
-    $stmt->bind_param("ss", $username, $password);
-
+    $stmt->bind_param("ss", $username, $password); // Ganti parameter kedua menjadi password yang sudah di-MD5
     $stmt->execute();
-
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $_SESSION['username'] = $row['username'];
         $_SESSION['role'] = $row['role'];
-
         header("Location: pages/dashboard");
         exit();
     } else {
@@ -31,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
