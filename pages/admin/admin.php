@@ -4,7 +4,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
 
 include_once '../../db/db_config.php';
 
-$error_message = "Username sudah tersedia"; // Deklarasi pesan error
+$error_message = ""; // Deklarasi pesan error
 
 // Tambah DATA atau Create
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
